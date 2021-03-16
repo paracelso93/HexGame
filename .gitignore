@@ -9,3 +9,10 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+cmake-build-debug/SDLbaseLib.cbp
+cmake-build-debug/SDLbaseLib
+cmake-build-debug/hexGame.cbp
+cmake-build-debug/hexGame
+cmake-build-debug/hex_game.cbp
+assets/.DS_Store
+.DS_Store
