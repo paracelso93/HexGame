@@ -1,0 +1,68 @@
+@land_unit
+id:tank
+// ciao gamer
+// facciamo un gioco
+start_component(renderable)
+file_path:assets/tank.png
+offset_x:39
+offset_y:32
+end_component()
+
+start_component(hex)
+blocks:0
+end_component()
+
+start_component(movable)
+movement:4
+end_component()
+
+start_component(selectable)
+end_component()
+end_unit
+
+// kek o cring
+// con
+// antonino
+// cannavacciuolo
+
+@land_unit
+id:infantry
+
+start_component(renderable)
+file_path:assets/infantry.png
+offset_x:39
+offset_y:32
+end_component()
+
+start_component(hex)
+blocks:1
+end_component()
+
+start_component(movable)
+movement:3
+end_component()
+
+start_component(selectable)
+end_component()
+end_unit
+
+@land_unit
+id:model
+
+start_component(renderable)
+file_path:assets/model.png
+offset_x:39
+offset_y:32
+end_component()
+
+start_component(hex)
+blocks:1
+end_component()
+
+start_component(movable)
+movement:3
+end_component()
+
+start_component(selectable)
+end_component()
+end_unit
