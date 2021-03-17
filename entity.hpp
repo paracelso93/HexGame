@@ -22,24 +22,6 @@ public:
     void set_id(const std::string& id) { this->id = id; }
     std::string get_id() const { return this->id; }
 
-    Entity(const Entity& other) {
-        this->id = other.id;
-        for (auto component : other.components) {
-            //this->components[component.first] = create_component<Uni()
-        }
-    }
-
-    template <typename T>
-    Component* create_component(int n, ...) {
-        va_list args;
-        va_start(args, n);
-        auto value = new T(args);
-
-        va_end(args);
-
-        return value;
-    }
-
     void update(float dt) {
         for (const auto& component : components) {
             component.second->update(dt);

@@ -35,6 +35,7 @@ typedef unsigned char mouse_t;
 struct Info {
     GUI_Panel* bg_panel;
     GUI_Text* position_info;
+  GUI_Text* entity_info;
 };
 
 class Game {
@@ -69,6 +70,7 @@ private:
     int mWindowWidth;
     int mWindowHeight;
     Vector2<int> old_position;
+    Texture* mCursorTexture;
 
     std::vector<Entity* > mEntities;
     Info* info;

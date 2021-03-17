@@ -6,7 +6,6 @@
 #include "parsers/unit_parser.hpp"
 
 #define TARGET_FPS 120
-
 Game::Game(int window_width, int window_height, int map_width, int map_height) : mWindow(nullptr), mRenderer(nullptr), mDone(false), mMousePosition(window_width / 2, window_height / 2) {
     srand(time(nullptr));
     mMouse = 0;
@@ -16,9 +15,8 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     init_sdl(window_width, window_height);
     mMap = std::make_unique<HexMap>(map_width, map_height, mRenderer);
     mCamera = std::make_unique<Camera>();
-
     startTime = SDL_GetTicks();
-
+    mCursorTexture = new Texture("assets/cursor.png", mRenderer);
     UnitParser::init();
     auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable>("data/simple_unit.txt", this);
     AStar::set_game(this);
@@ -41,7 +39,8 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
 
     info = new Info();
     info->bg_panel = new GUI_Panel(1720, 880, 200, 200, BLUE);
-    info->position_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "position: (,)", YELLOW, 1750, 920);
+    info->position_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "position: (,)", YELLOW, 1725, 920);
+    info->entity_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "entity: ", YELLOW, 1725, 950);
     old_position = Vector2<int>(0, 0);
 }
 
@@ -55,6 +54,7 @@ void Game::init_sdl(int window_width, int window_height) {
     TTF_Init();
     mWindow = SDL_CreateWindow("HexMap", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_width, window_height, SDL_WINDOW_RESIZABLE | SDL_WINDOW_INPUT_GRABBED);
     mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_ShowCursor(SDL_DISABLE);
 }
 
 void Game::handle_input() {
@@ -101,7 +101,8 @@ void Game::handle_input() {
                     mMouse |= RIGHT_BUTTON_DOWN;
                     break;
                 case SDL_BUTTON_MIDDLE:
-                    mMouse |= MIDDLE_BUTTON_DOWN;
+
+		  mMouse |= MIDDLE_BUTTON_DOWN;
                     break;
             }
         }
@@ -135,20 +136,12 @@ void Game::update() {
     info->position_info->set_text("position: " + mMap->get_selector()->position.to_string());
 
     if (!(old_position == mMap->get_selector()->position)) {
-        mEntities[0]->get_component<Hex>()->move(mMap->get_selector()->position.x - old_position.x, mMap->get_selector()->position.y - old_position.y,
-                                                 mEntities[0]->get_component<Renderable>()->get_transform());
-        for (int x = 0; x < mMap->get_size().x; x++) {
-            for (int y = 0; y < mMap->get_size().y; y++) {
-                Tile *tile = mMap->get_tile_at_index(x, y);
-                if (tile == nullptr) continue;
-                tile->set_new_tile_texture("assets/grass.png", mRenderer);
-                if (mEntities[0]->get_component<Movable>()->can_move(x, y)) {
+        
+        Entity* e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
+	if (e != nullptr) {
+	    info->entity_info->set_text("entity: " + e->get_id());
+	}
 
-                    tile->set_new_tile_texture("assets/base.png", mRenderer);
-                }
-            }
-        }
-        old_position = mMap->get_selector()->position;
     }
 
     SDL_GetMouseState(&mMousePosition.x, &mMousePosition.y);
@@ -175,7 +168,9 @@ void Game::render() {
     TextureHandler::getInstance()->apply_offset(nullptr);
     info->bg_panel->render(mRenderer);
     info->position_info->render(mRenderer);
+    info->entity_info->render(mRenderer);
 
+    mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
     SDL_RenderPresent(mRenderer);
 }
 

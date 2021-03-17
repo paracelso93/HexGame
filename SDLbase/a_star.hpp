@@ -31,7 +31,7 @@ public:
     static bool is_destination(int x, int y, Node destination);
     static double calculate_h(int x, int y, Node destination);
     static std::vector<Node> a_star(Node player, Node destination);
-    static std::vector<Node> make_path(std::array < std::array <Node, 12>, 26> map, Node destination);
+    static std::vector<Node> make_path(std::vector<std::vector<Node> > map, Node destination);
 };
 
 
