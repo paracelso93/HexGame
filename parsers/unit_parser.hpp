@@ -136,7 +136,7 @@ public:
                         reading_unit = true;
                         current_unit = new Unit();
                         current_unit->type = type;
-                        current_entity = new Entity("");
+                        current_entity = new Entity("", true);
                         continue;
                     }
                 }
@@ -145,7 +145,7 @@ public:
             if (reading_unit) {
                 if (check_line_with_string(line, "id:")) {
                     current_unit->id = line.substr(3);
-                    current_entity->set_id(current_unit->id);
+                    current_entity->set_type_id(current_unit->id);
                 }
 
                 if (check_line_with_string(line, "start_component(")) {

@@ -35,7 +35,8 @@ typedef unsigned char mouse_t;
 struct Info {
     GUI_Panel* bg_panel;
     GUI_Text* position_info;
-  GUI_Text* entity_info;
+    GUI_Text* entity_info;
+    GUI_Text* entity_type_info;
 };
 
 class Game {

@@ -41,6 +41,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     info->bg_panel = new GUI_Panel(1720, 880, 200, 200, BLUE);
     info->position_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "position: (,)", YELLOW, 1725, 920);
     info->entity_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "entity: ", YELLOW, 1725, 950);
+    info->entity_type_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "type: ", YELLOW, 1726, 980);
     old_position = Vector2<int>(0, 0);
 }
 
@@ -135,14 +136,14 @@ void Game::update() {
 
     info->position_info->set_text("position: " + mMap->get_selector()->position.to_string());
 
-    if (!(old_position == mMap->get_selector()->position)) {
-        
-        Entity* e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
-	if (e != nullptr) {
-	    info->entity_info->set_text("entity: " + e->get_id());
-	}
+    //if (!(old_position == mMap->get_selector()->position)) {
 
+    Entity *e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
+    if (e != nullptr) {
+        info->entity_info->set_text("entity: " + std::to_string(e->get_id()));
+        info->entity_type_info->set_text("type: " + e->get_type_id());
     }
+    //}
 
     SDL_GetMouseState(&mMousePosition.x, &mMousePosition.y);
     mMap->update(mDeltaTime, mMousePosition, mMouse & LEFT_BUTTON_DOWN, mCamera.get());
@@ -169,6 +170,7 @@ void Game::render() {
     info->bg_panel->render(mRenderer);
     info->position_info->render(mRenderer);
     info->entity_info->render(mRenderer);
+    info->entity_type_info->render(mRenderer);
 
     mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
     SDL_RenderPresent(mRenderer);

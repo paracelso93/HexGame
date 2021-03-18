@@ -10,17 +10,29 @@
 
 #include "component.hpp"
 
+typedef unsigned int entity_id;
+
 class Entity {
 private:
-    std::string id;
+    std::string type_id;
+    static entity_id current_id;
+    entity_id id;
     std::unordered_map<std::string, Component* > components;
 public:
-    Entity(const std::string& id) {
-        this->id = id;
+    Entity(const std::string& type_id, bool is_model = false) {
+        this->type_id = type_id;
+        if (!is_model) {
+            this->id = current_id;
+            current_id++;
+        } else {
+            this->id = -1;
+        }
     }
 
-    void set_id(const std::string& id) { this->id = id; }
-    std::string get_id() const { return this->id; }
+    void set_type_id(const std::string& type_id) { this->type_id = type_id; }
+    std::string get_type_id() const { return this->type_id; }
+
+    entity_id get_id() const { return this->id; }
 
     void update(float dt) {
         for (const auto& component : components) {
