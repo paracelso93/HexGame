@@ -147,7 +147,7 @@ void Game::update() {
         info->entity_type_info->set_text("type: " + e->get_type_id());
     }
 
-    auto position = mMap->get_hex_at_position(mMousePosition.x, mMousePosition.y);
+    auto position = mMap->get_hex_at_position(mMousePosition.x - mCamera->get_offset().x, mMousePosition.y - mCamera->get_offset().y);
     e = get_entity_at_position(position.x, position.y);
     if (e != nullptr) {
         pointing = true;
