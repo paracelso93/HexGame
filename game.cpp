@@ -17,6 +17,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     mCamera = std::make_unique<Camera>();
     startTime = SDL_GetTicks();
     mCursorTexture = new Texture("assets/cursor.png", mRenderer);
+    mPointerTexture = new Texture("assets/pointer.png", mRenderer);
     UnitParser::init();
     auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable>("data/simple_unit.txt", this);
     AStar::set_game(this);
@@ -43,6 +44,8 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     info->entity_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "entity: ", YELLOW, 1725, 950);
     info->entity_type_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "type: ", YELLOW, 1726, 980);
     old_position = Vector2<int>(0, 0);
+
+    pointing = false;
 }
 
 Game::~Game() {
@@ -143,6 +146,14 @@ void Game::update() {
         info->entity_info->set_text("entity: " + std::to_string(e->get_id()));
         info->entity_type_info->set_text("type: " + e->get_type_id());
     }
+
+    auto position = mMap->get_hex_at_position(mMousePosition.x, mMousePosition.y);
+    e = get_entity_at_position(position.x, position.y);
+    if (e != nullptr) {
+        pointing = true;
+    } else {
+        pointing = false;
+    }
     //}
 
     SDL_GetMouseState(&mMousePosition.x, &mMousePosition.y);
@@ -171,8 +182,12 @@ void Game::render() {
     info->position_info->render(mRenderer);
     info->entity_info->render(mRenderer);
     info->entity_type_info->render(mRenderer);
-
-    mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
+    if (pointing) {
+        mPointerTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
+    } else {
+        mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE,
+                               Vector2<float>(0.5, 0.5));
+    }
     SDL_RenderPresent(mRenderer);
 }
 

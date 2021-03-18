@@ -72,6 +72,8 @@ private:
     int mWindowHeight;
     Vector2<int> old_position;
     Texture* mCursorTexture;
+    Texture* mPointerTexture;
+    bool pointing;
 
     std::vector<Entity* > mEntities;
     Info* info;
