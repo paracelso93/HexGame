@@ -18,6 +18,8 @@
 #include "components/selectable.hpp"
 #include "components/movable.hpp"
 #include "SDLbase/a_star.hpp"
+#include "components/unit_data.hpp"
+#include "game_gui/unit_data_gui.hpp"
 
 #include <memory>
 #include <SDL2/SDL_image.h>
@@ -73,6 +75,8 @@ private:
     Vector2<int> old_position;
     Texture* mCursorTexture;
     Texture* mPointerTexture;
+    UnitDataGUI* unitDataGui;
+    bool rendering_gui;
     bool pointing;
 
     std::vector<Entity* > mEntities;

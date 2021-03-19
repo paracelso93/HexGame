@@ -1,7 +1,6 @@
+
 @land_unit
 id:tank
-// ciao gamer
-// facciamo un gioco
 start_component(renderable)
 file_path:assets/tank.png
 offset_x:39
@@ -18,12 +17,15 @@ end_component()
 
 start_component(selectable)
 end_component()
-end_unit
 
-// kek o cring
-// con
-// antonino
-// cannavacciuolo
+start_component(unit_data)
+hp:15
+armor:3
+defence:1
+dmg:6
+attack:3
+end_component()
+end_unit
 
 @land_unit
 id:infantry
@@ -43,6 +45,14 @@ movement:3
 end_component()
 
 start_component(selectable)
+end_component()
+
+start_component(unit_data)
+hp:8
+armor:0
+defence:2
+dmg:3
+attack:4
 end_component()
 end_unit
 

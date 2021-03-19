@@ -26,6 +26,7 @@ public:
     void render(SDL_Renderer* renderer);
     void update(float dt) override {}
     Transform* get_transform() { return transform; }
+    Texture* get_texture() { return texture.get(); }
     ~Renderable() { delete transform; }
     static Component* parse(std::vector<std::string> buffer, class Entity* entity, class Game* game);
 };
