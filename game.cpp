@@ -21,7 +21,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     unitDataGui = new UnitDataGUI();
     rendering_gui = false;
     UnitParser::init();
-    auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable, UnitData>("data/simple_unit.txt", this);
+    auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable, UnitData, Attacker>("data/simple_unit.txt", this);
     AStar::set_game(this);
     for (int i = 0; i < 10; i++) {
         std::string val = "tank";
@@ -29,11 +29,11 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
         if (i > 5) {
             val = "infantry";
         }
-        Entity* e = UnitParser::create_entity_from_unit<Hex, Movable, Renderable, Selectable, UnitData>(UnitParser::get_unit_with_id(val));
+        Entity* e = UnitParser::create_entity_from_unit<Hex, Movable, Renderable, Selectable, UnitData, Attacker>(UnitParser::get_unit_with_id(val));
         e->get_component<Hex>()->move(0, i, e->get_component<Renderable>()->get_transform());
         mEntities.push_back(e);
     }
-
+    mEntities[0]->get_component<Attacker>()->defend(mEntities[1]->get_component<Attacker>()->attack(mEntities[0]));
     int rand_x = rand() % map_width;
     int rand_y = rand() % map_height;
     Tile* tile = mMap->get_tile_at_index(rand_x, rand_y);
@@ -206,6 +206,7 @@ void Game::render() {
         mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE,
                                Vector2<float>(0.5, 0.5));
     }
+
     SDL_RenderPresent(mRenderer);
 }
 

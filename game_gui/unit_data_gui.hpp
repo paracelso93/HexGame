@@ -7,20 +7,22 @@
 
 #include "../gui/panel.hpp"
 #include "../gui/text.hpp"
+#include "../gui/multiline_text.hpp"
 #include "../SDLbase/texture_handler.hpp"
 
-// TODO(edoardo): add a description component
 struct DataLabels {
     GUI_Text* hp_label;
     GUI_Text* armor_label;
     GUI_Text* defence_label;
     GUI_Text* damage_label;
     GUI_Text* attack_label;
+    GUI_MultilineText* description;
 };
 
 class UnitDataGUI {
 private:
     GUI_Panel* background;
+    GUI_Panel* description_background;
     GUI_Text* name;
     DataLabels labels;
     Texture* sprite;

@@ -18,11 +18,13 @@ private:
     int defence_skill;
     int damage;
     int attack_skill;
+    std::string description;
 
 public:
     UnitData(int hp, int armor, int defence, int dmg, int attack);
     UnitData(const UnitData& other, class Entity* owner);
     void update(float dt) override {}
+    void set_description(const std::string& description);
     static Component* parse(std::vector<std::string> buffer, class Entity* entity, class Game* game);
 
     static int parse_segment_i(const std::string& line, const std::string& value, int size) {
@@ -34,17 +36,15 @@ public:
         return 0;
     }
 
-    int getHp() const;
-
-    int getTotalHp() const;
-
-    int getArmor() const;
-
-    int getDefenceSkill() const;
-
-    int getDamage() const;
-
-    int getAttackSkill() const;
+    int get_hp() const;
+    int get_total_hp() const;
+    int get_armor() const;
+    int get_defence_skill() const;
+    int get_damage() const;
+    int get_attack_skill() const;
+    const std::string& get_description() const;
+    
+    void set_hp(int hp) { this->hp = hp; }
 
     static const std::string id;
 };

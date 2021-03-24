@@ -19,7 +19,9 @@
 #include "components/movable.hpp"
 #include "SDLbase/a_star.hpp"
 #include "components/unit_data.hpp"
+#include "components/attacker.hpp"
 #include "game_gui/unit_data_gui.hpp"
+#include "gui/multiline_text.hpp"
 
 #include <memory>
 #include <SDL2/SDL_image.h>

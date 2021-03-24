@@ -24,6 +24,10 @@ armor:3
 defence:1
 dmg:6
 attack:3
+description:a tank$$he fast$$he shoot$$he desires shloop
+end_component()
+
+start_component(attacker)
 end_component()
 end_unit
 
@@ -54,6 +58,9 @@ defence:2
 dmg:3
 attack:4
 end_component()
+
+start_component(attacker)
+end_component()
 end_unit
 
 @land_unit
@@ -74,5 +81,16 @@ movement:3
 end_component()
 
 start_component(selectable)
+end_component()
+
+start_component(unit_data)
+hp:10
+armor:1
+defence:3
+dmg:4
+attack:5
+end_component()
+
+start_component(attacker)
 end_component()
 end_unit
