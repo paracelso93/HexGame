@@ -49,7 +49,7 @@ void UnitDataGUI::set_unit(Entity *entity) {
 }
 
 void UnitDataGUI::update(float dt, Game* game) {
-    background->get_exit_button()->update(game->get_mouse_position(), game->get_mouse_state());
+    background->get_exit_button()->update(game, visible);
     top->update(dt);
     if (top->is_dragging()) {
         this->offset = top->get_offset();

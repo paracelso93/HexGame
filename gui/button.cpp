@@ -28,10 +28,12 @@ void GUI_Button::set_colors(Color hover, Color click) {
     this->click_color = click;
 }
 
-void GUI_Button::update(const Vector2<int>& mouse_position, mouse_t mouse) {
+void GUI_Button::update(Game* game, bool visible) {
     if (updated) {
         updated = false;
     }
+    auto mouse_position = game->get_mouse_position();
+    auto mouse = game->get_mouse_state();
 
     if (mouse_position.x >= panel->get_position().x && mouse_position.x <= panel->get_position().x + panel->get_size().x &&
         mouse_position.y >= panel->get_position().y && mouse_position.y <= panel->get_position().y + panel->get_size().y) {
@@ -44,12 +46,20 @@ void GUI_Button::update(const Vector2<int>& mouse_position, mouse_t mouse) {
         if (mouse & LEFT_BUTTON_DOWN) {
             panel->set_color(click_color);
             pressing = true;
+            if (visible) {
+                game->set_cursor(POINTING);
+            }
             return;
         }
         if (!pressing) {
             panel->set_color(hover_color);
+            if (visible) {
+                game->set_cursor(HOVERING);
+            }
         }
         return;
+    } else {
+        game->set_cursor(POINTING);
     }
     panel->set_color(bg_color);
     pressing = false;

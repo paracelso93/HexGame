@@ -43,6 +43,11 @@ struct Info {
     GUI_Text* entity_type_info;
 };
 
+enum Cursor {
+    POINTING,
+    HOVERING
+};
+
 class Game {
 private:
     std::unique_ptr<HexMap> mMap;
@@ -65,6 +70,7 @@ public:
     Entity* get_entity_at_position(int x, int y);
     const Vector2<int>& get_mouse_position() { return mMousePosition; }
     const mouse_t get_mouse_state() { return mMouse; }
+    void set_cursor(Cursor cursor);
 
 private:
     mouse_t mMouse;
@@ -81,6 +87,7 @@ private:
     Texture* mPointerTexture;
     UnitDataGUI* unitDataGui;
     bool pointing;
+    bool hovering_on_button;
 
     std::vector<Entity* > mEntities;
     Info* info;

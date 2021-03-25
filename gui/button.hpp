@@ -21,7 +21,7 @@ public:
         this->data = new T();
     }
 
-    void update(const Vector2<int>& mouse_position, mouse_t mouse);
+    void update(class Game* game, bool visible);
     void set_colors(Color hover, Color click);
     void* get_data() { updated = false; return this->data; }
     bool data_changed() const { return updated; }
