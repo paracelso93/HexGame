@@ -8,6 +8,7 @@
 #include "../gui/panel.hpp"
 #include "../gui/text.hpp"
 #include "../gui/multiline_text.hpp"
+#include "../gui/draggable.hpp"
 #include "../SDLbase/texture_handler.hpp"
 
 struct DataLabels {
@@ -27,11 +28,17 @@ private:
     DataLabels labels;
     Texture* sprite;
     class Entity* entity;
+    bool visible;
+    GUI_Draggable* top;
+    Vector2<int> offset;
 
 public:
-    UnitDataGUI();
+    UnitDataGUI(class Game* game);
     void render(SDL_Renderer* renderer);
     void set_unit(class Entity* entity);
+    void update(float dt, class Game* game);
+    void set_visible(bool visible) { this->visible = visible; }
+    bool get_visible() const { return visible; }
 };
 
 

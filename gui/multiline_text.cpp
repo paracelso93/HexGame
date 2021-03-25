@@ -11,12 +11,13 @@ GUI_MultilineText::GUI_MultilineText(TTF_Font *font, std::string text, Color col
     std::string line;
     std::string obama = text;
     int num_lines = 0;
+    l_offset = line_offset;
     int old_position = 0;
     while (position < obama.length()) {
         if (obama[position] == '$' && obama[position + 1] == '$') {
             line = obama.substr(old_position, position - old_position);
             old_position = position + 2;
-            std::cout << line << std::endl;
+            //std::cout << line << std::endl;
             lines.push_back(new GUI_Text(font, line, color, x, y + line_offset * num_lines));
             //obama.erase(0, position + 1);
             num_lines++;

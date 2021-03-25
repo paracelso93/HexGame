@@ -18,8 +18,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     startTime = SDL_GetTicks();
     mCursorTexture = new Texture("assets/cursor.png", mRenderer);
     mPointerTexture = new Texture("assets/pointer.png", mRenderer);
-    unitDataGui = new UnitDataGUI();
-    rendering_gui = false;
+    unitDataGui = new UnitDataGUI(this);
     UnitParser::init();
     auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable, UnitData, Attacker>("data/simple_unit.txt", this);
     AStar::set_game(this);
@@ -144,16 +143,18 @@ void Game::update() {
     if (mMouse & RIGHT_BUTTON_UP) {
         Entity *e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
         if (e != nullptr) {
-            rendering_gui = true;
+            unitDataGui->set_visible(true);
             unitDataGui->set_unit(e);
         } else {
-            rendering_gui = false;
+            unitDataGui->set_visible(false);
         }
     }
 
-    if (mMouse & LEFT_BUTTON_DOWN) {
-        rendering_gui = false;
-    }
+    unitDataGui->update(mDeltaTime, this);
+
+    //if (mMouse & LEFT_BUTTON_DOWN) {
+    //    unitDataGui->set_visible(false);
+    //}
     //if (!(old_position == mMap->get_selector()->position)) {
 
     Entity *e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
@@ -197,7 +198,7 @@ void Game::render() {
     info->position_info->render(mRenderer);
     info->entity_info->render(mRenderer);
     info->entity_type_info->render(mRenderer);
-    if (rendering_gui) {
+    if (unitDataGui->get_visible()) {
         unitDataGui->render(mRenderer);
     }
     if (pointing) {

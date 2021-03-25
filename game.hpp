@@ -63,6 +63,8 @@ public:
     HexMap* get_hex_map() const { return mMap.get(); }
     SDL_Renderer* get_renderer() { return mRenderer; }
     Entity* get_entity_at_position(int x, int y);
+    const Vector2<int>& get_mouse_position() { return mMousePosition; }
+    const mouse_t get_mouse_state() { return mMouse; }
 
 private:
     mouse_t mMouse;
@@ -78,7 +80,6 @@ private:
     Texture* mCursorTexture;
     Texture* mPointerTexture;
     UnitDataGUI* unitDataGui;
-    bool rendering_gui;
     bool pointing;
 
     std::vector<Entity* > mEntities;
