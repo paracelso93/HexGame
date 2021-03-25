@@ -45,7 +45,8 @@ struct Info {
 
 enum Cursor {
     POINTING,
-    HOVERING
+    HOVERING,
+    DRAGGING
 };
 
 class Game {
@@ -71,6 +72,7 @@ public:
     const Vector2<int>& get_mouse_position() { return mMousePosition; }
     const mouse_t get_mouse_state() { return mMouse; }
     void set_cursor(Cursor cursor);
+    bool get_hovering() const { return hovering_on_button; }
 
 private:
     mouse_t mMouse;
@@ -85,8 +87,9 @@ private:
     Vector2<int> old_position;
     Texture* mCursorTexture;
     Texture* mPointerTexture;
+    Texture* mDragTexture;
     UnitDataGUI* unitDataGui;
-    bool pointing;
+    Cursor cursor;
     bool hovering_on_button;
 
     std::vector<Entity* > mEntities;

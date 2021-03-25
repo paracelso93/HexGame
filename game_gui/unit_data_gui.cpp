@@ -15,7 +15,7 @@ UnitDataGUI::UnitDataGUI(Game* game) : labels() {
     background->set_exit_function([](void* data) {});
     background->get_exit_button()->set_colors(Color(100, 80, 10), Color(85, 74, 4));
     description_background = new GUI_Panel(510, 310, 480, 280, Color(200, 150, 20));
-    top = new GUI_Draggable(500, 100 - 40, 500, 40, game);
+    top = new GUI_Draggable(500, 100 - 40, 460, 40, game);
     this->offset = Vector2<int>(0, 0);
     name = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(30), "$name", BLACK, 520, 120);
     sprite = nullptr;
@@ -52,6 +52,7 @@ void UnitDataGUI::update(float dt, Game* game) {
     background->get_exit_button()->update(game, visible);
     top->update(dt);
     if (top->is_dragging()) {
+        game->set_cursor(DRAGGING);
         this->offset = top->get_offset();
         this->background->set_position(500 + offset.x, 100 + offset.y);
         name->set_position(520 + offset.x, 120 + offset.y);
@@ -64,6 +65,9 @@ void UnitDataGUI::update(float dt, Game* game) {
             labels.description->set_position(520 + offset.x, 310 + offset.y);
         description_background->set_position(510 + offset.x, 310 + offset.y);
         background->get_exit_button()->set_position(500 + offset.x + 460, 60 + offset.y);
+    } else {
+        if (!game->get_hovering())
+            game->set_cursor(POINTING);
     }
 
     if (background->get_exit_button()->data_changed()) {

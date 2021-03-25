@@ -18,6 +18,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     startTime = SDL_GetTicks();
     mCursorTexture = new Texture("assets/cursor.png", mRenderer);
     mPointerTexture = new Texture("assets/pointer.png", mRenderer);
+    mDragTexture = new Texture("assets/drag.png", mRenderer);
     unitDataGui = new UnitDataGUI(this);
     UnitParser::init();
     auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable, UnitData, Attacker>("data/simple_unit.txt", this);
@@ -46,7 +47,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     info->entity_type_info = new GUI_Text(GUI_Fonts::get_instance()->get_font_with_size(24), "type: ", YELLOW, 1726, 980);
     old_position = Vector2<int>(0, 0);
 
-    pointing = false;
+    cursor = POINTING;
     hovering_on_button = false;
 }
 
@@ -167,10 +168,10 @@ void Game::update() {
     auto position = mMap->get_hex_at_position(mMousePosition.x - mCamera->get_offset().x, mMousePosition.y - mCamera->get_offset().y);
     e = get_entity_at_position(position.x, position.y);
     if (e != nullptr) {
-        pointing = true;
+        cursor = HOVERING;
     } else {
         if (!hovering_on_button) {
-            pointing = false;
+            cursor = POINTING;
         }
     }
     //}
@@ -204,11 +205,15 @@ void Game::render() {
     if (unitDataGui->get_visible()) {
         unitDataGui->render(mRenderer);
     }
-    if (pointing) {
-        mPointerTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
-    } else {
-        mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE,
+    switch (cursor) {
+        case HOVERING: mPointerTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
+            break;
+        case POINTING: mCursorTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE,
                                Vector2<float>(0.5, 0.5));
+            break;
+        case DRAGGING: mDragTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE,
+                                            Vector2<float>(0.5, 0.5));
+            break;
     }
 
     SDL_RenderPresent(mRenderer);
@@ -239,11 +244,13 @@ Entity* Game::get_entity_at_position(int x, int y) {
 
 void Game::set_cursor(Cursor cursor) {
     if (cursor == HOVERING) {
-        this->pointing = true;
         hovering_on_button = true;
     }
     if (cursor == POINTING) {
-        this->pointing = false;
         hovering_on_button = false;
     }
+    if (cursor == DRAGGING) {
+        hovering_on_button = true;
+    }
+    this->cursor = cursor;
 }
