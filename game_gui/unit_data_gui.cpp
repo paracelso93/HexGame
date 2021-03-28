@@ -36,6 +36,14 @@ void UnitDataGUI::set_unit(Entity *entity) {
     this->name->set_text(entity->get_type_id());
     sprite = entity->get_component<Renderable>()->get_texture();
     TTF_Font* f = GUI_Fonts::get_instance()->get_font_with_size(24);
+
+    delete labels.hp_label;
+    delete labels.armor_label;
+    delete labels.defence_label;
+    delete labels.damage_label;
+    delete labels.attack_label;
+    delete labels.description;
+
     labels.hp_label = new GUI_Text(f, "hp: " + std::to_string(entity->get_component<UnitData>()->get_hp()) + "/" + std::to_string(entity->get_component<UnitData>()->get_total_hp()), BLACK, 520 + offset.x, 160 + offset.y);
     labels.armor_label = new GUI_Text(f, "armor: " + std::to_string(entity->get_component<UnitData>()->get_armor()), BLACK, 520 + offset.x, 190 + offset.y);
     labels.defence_label = new GUI_Text(f, "defence: " + std::to_string(entity->get_component<UnitData>()->get_defence_skill()), BLACK, 520 + offset.x, 220 + offset.y);

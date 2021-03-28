@@ -23,6 +23,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     UnitParser::init();
     auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable, UnitData, Attacker>("data/simple_unit.txt", this);
     AStar::set_game(this);
+    mEntities.reserve(64);
     for (int i = 0; i < 10; i++) {
         std::string val = "tank";
         if (i == 5) val = "model";
