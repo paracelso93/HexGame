@@ -15,6 +15,7 @@
 #include <string>
 #include "../components/hex.hpp"
 #include "../components/transform.hpp"
+#include "../components/renderable.hpp"
 
 class UnitParser {
 private:
@@ -45,6 +46,9 @@ public:
             add_components<args...>(entity, components, j);
             j = 0;
             components.clear();
+        }
+        if (entity->has_component<Renderable>()) {
+            entity->add_component(entity->get_component<Renderable>()->get_transform());
         }
         return entity;
     }

@@ -40,14 +40,14 @@ std::vector<Node> AStar::a_star(Node player, Node destination) {
     bool closed_list[game->get_map_size().x][game->get_map_size().y];
 
     const Vector2<int> map_size = game->get_map_size();
-    //std::array< std::array < Node, 12 >, 26 > map {0};
-    std::vector< std::vector <Node> > map;
-    map.reserve(map_size.x);
+    std::array< std::array < Node, 12 >, 26 > map {0};
+    //std::vector< std::vector <Node> > map;
+    //map.reserve(map_size.x);
     for (int x = 0; x < map_size.x; x++) {
-        map[x].reserve(map_size.y);
+        //map[x].reserve(map_size.y);
         for (int y = 0; y < map_size.y; y++) {
 	    
-	        map[x].emplace_back(Node());
+	        //map[x].emplace_back(Node());
             map[x][y].f_cost = FLT_MAX;
             map[x][y].g_cost = FLT_MAX;
             map[x][y].h_cost = FLT_MAX;
@@ -88,7 +88,7 @@ std::vector<Node> AStar::a_star(Node player, Node destination) {
 
             node = *it_node;
             open_list.erase(it_node);
-        } while (!is_valid(node.x, node.y));
+        } while (!is_valid(node.x, node.y) && open_list.size() > 0);
 
         x = node.x;
         y = node.y;
@@ -133,7 +133,7 @@ std::vector<Node> AStar::a_star(Node player, Node destination) {
 }
 
 
-std::vector<Node> AStar::make_path(std::vector<std::vector<Node> > map, Node destination) {
+std::vector<Node> AStar::make_path(std::array< std::array < Node, 12 >, 26 > map, Node destination) {
     try {
         //std::cout << "found a path" << std::endl;
         int x = destination.x;

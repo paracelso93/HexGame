@@ -22,6 +22,7 @@
 #include "components/attacker.hpp"
 #include "game_gui/unit_data_gui.hpp"
 #include "gui/multiline_text.hpp"
+#include "game_gui/entity_controller_gui.hpp"
 
 #include <memory>
 #include <SDL2/SDL_image.h>
@@ -73,6 +74,9 @@ public:
     const mouse_t get_mouse_state() { return mMouse; }
     void set_cursor(Cursor cursor);
     bool get_hovering() const { return hovering_on_button; }
+    Tile* get_tile_selected() { return mMap->get_selector()->selected_tile; }
+    bool clicked_button;
+
 
 private:
     mouse_t mMouse;
@@ -89,6 +93,7 @@ private:
     Texture* mPointerTexture;
     Texture* mDragTexture;
     UnitDataGUI* unitDataGui;
+    EntityControllerGUI* entityControllerGui;
     Cursor cursor;
     bool hovering_on_button;
 

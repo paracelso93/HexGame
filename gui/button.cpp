@@ -41,6 +41,7 @@ void GUI_Button::update(Game* game, bool visible) {
             callback(data);
             updated = true;
             pressing = false;
+            game->clicked_button = true;
             return;
         }
         if (mouse & LEFT_BUTTON_DOWN) {

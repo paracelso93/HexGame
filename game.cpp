@@ -6,7 +6,7 @@
 #include "parsers/unit_parser.hpp"
 
 #define TARGET_FPS 120
-Game::Game(int window_width, int window_height, int map_width, int map_height) : mWindow(nullptr), mRenderer(nullptr), mDone(false), mMousePosition(window_width / 2, window_height / 2) {
+Game::Game(int window_width, int window_height, int map_width, int map_height) : mWindow(nullptr), mRenderer(nullptr), mDone(false), mMousePosition(window_width / 2, window_height / 2), clicked_button(false) {
     srand(time(nullptr));
     mMouse = 0;
     mDeltaTime = 0.017f;
@@ -20,6 +20,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
     mPointerTexture = new Texture("assets/pointer.png", mRenderer);
     mDragTexture = new Texture("assets/drag.png", mRenderer);
     unitDataGui = new UnitDataGUI(this);
+    entityControllerGui = new EntityControllerGUI();
     UnitParser::init();
     auto entities = UnitParser::parse<Hex, Movable, Renderable, Selectable, UnitData, Attacker>("data/simple_unit.txt", this);
     AStar::set_game(this);
@@ -30,7 +31,7 @@ Game::Game(int window_width, int window_height, int map_width, int map_height) :
         if (i > 5) {
             val = "infantry";
         }
-        Entity* e = UnitParser::create_entity_from_unit<Hex, Movable, Renderable, Selectable, UnitData, Attacker>(UnitParser::get_unit_with_id(val));
+        Entity* e = UnitParser::create_entity_from_unit<Hex, Movable, Transform, Renderable, Selectable, UnitData, Attacker>(UnitParser::get_unit_with_id(val));
         e->get_component<Hex>()->move(0, i, e->get_component<Renderable>()->get_transform());
         mEntities.push_back(e);
     }
@@ -154,20 +155,28 @@ void Game::update() {
     }
 
     unitDataGui->update(mDeltaTime, this);
+    entityControllerGui->update(mDeltaTime, this);
 
     //if (mMouse & LEFT_BUTTON_DOWN) {
     //    unitDataGui->set_visible(false);
     //}
-    //if (!(old_position == mMap->get_selector()->position)) {
+    if (mMouse & LEFT_BUTTON_UP) {
 
-    Entity *e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
-    if (e != nullptr) {
-        info->entity_info->set_text("entity: " + std::to_string(e->get_id()));
-        info->entity_type_info->set_text("type: " + e->get_type_id());
+        Entity *e = get_entity_at_position(mMap->get_selector()->position.x, mMap->get_selector()->position.y);
+        if (e != nullptr) {
+            info->entity_info->set_text("entity: " + std::to_string(e->get_id()));
+            info->entity_type_info->set_text("type: " + e->get_type_id());
+            if (!entityControllerGui->get_moving()) {
+                entityControllerGui->set_entity(e);
+            }
+        } else {
+            if (!entityControllerGui->get_moving())
+                entityControllerGui->set_entity(nullptr);
+        }
     }
 
     auto position = mMap->get_hex_at_position(mMousePosition.x - mCamera->get_offset().x, mMousePosition.y - mCamera->get_offset().y);
-    e = get_entity_at_position(position.x, position.y);
+    Entity* e = get_entity_at_position(position.x, position.y);
     if (e != nullptr) {
         cursor = HOVERING;
     } else {
@@ -175,15 +184,16 @@ void Game::update() {
             cursor = POINTING;
         }
     }
-    //}
 
     SDL_GetMouseState(&mMousePosition.x, &mMousePosition.y);
-    mMap->update(mDeltaTime, mMousePosition, mMouse & LEFT_BUTTON_DOWN || mMouse & RIGHT_BUTTON_DOWN, mCamera.get());
+    if (!clicked_button)
+        mMap->update(mDeltaTime, mMousePosition, mMouse & LEFT_BUTTON_DOWN || mMouse & RIGHT_BUTTON_DOWN, mCamera.get());
     mCamera->update(mDeltaTime);
 
     for (Entity* entity : mEntities) {
         entity->update(mDeltaTime);
     }
+    clicked_button = false;
     //button->update(mMousePosition, mMouse);
 }
 
@@ -206,6 +216,7 @@ void Game::render() {
     if (unitDataGui->get_visible()) {
         unitDataGui->render(mRenderer);
     }
+    entityControllerGui->render(mRenderer);
     switch (cursor) {
         case HOVERING: mPointerTexture->render(mRenderer, Vector2<float>(mMousePosition.x, mMousePosition.y), WHITE, Vector2<float>(0.5, 0.5));
             break;
